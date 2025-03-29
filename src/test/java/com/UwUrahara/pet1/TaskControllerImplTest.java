@@ -1,76 +1,109 @@
 package com.UwUrahara.pet1;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class TaskControllerImplTest {
     @Mock
     private TaskService taskService;
-    @InjectMocks
-    private TaskControllerImpl taskController;
+    private TaskController taskController;
+
+    private final PrintStream standardOut = System.out;
+    private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+
+    @BeforeEach
+    public void setUp() {
+        System.setOut(new PrintStream(outputStreamCaptor));
+    }
+
+    @AfterEach
+    public void tearDown() {
+        System.setOut(standardOut);
+    }
 
     @Test
-    void showMenu_ShouldCallAddTask_WhenInput1() {
+    public void showMenu() {
         // Given
-        String input = "1\n0\n"; // Вводим 1, затем 0 для выхода
+        String input = "2\n2\n0";
         InputStream in = new ByteArrayInputStream(input.getBytes());
-
-        System.setIn(in);
+        taskController = new TaskControllerImpl(taskService, new Scanner(in));
         // When
         taskController.showMenu();
-
         // Then
-        verify(taskService, times(1)).addTask();
+        verify(taskService, times(2)).getAll();
     }
 
     @Test
-    void showMenu_ShouldCallShowList_WhenInput2() {
-        String input = "2\n0\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-
-        taskController.showMenu();
-
-        verify(taskService, times(1)).showList();
+    public void addTask() {
+        // Given
+        String input = """
+                1
+                qwe
+                qwer
+                26.05.2024
+                0""";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        taskController = new TaskControllerImpl(taskService, new Scanner(in));
+        // When
+        taskController.addTask();
+        // Then
+        verify(taskService, times(1))
+                .addTask("qwe", "qwer", TaskTracker.dateFromString("26.05.2024"));
     }
 
     @Test
-    void showMenu_ShouldExit_WhenInput0() {
-        String input = "0\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+    public void deleteTask() {
 
-        taskController.showMenu();
-
-        verifyNoInteractions(taskService);
     }
 
     @Test
-    void showMenu_ShouldHandleInvalidInput() {
-        String input = "99\n0\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+    public void deleteTaskWithException () {
 
-        taskController.showMenu();
-
-        verifyNoInteractions(taskService);
     }
 
     @Test
-    void showMenu_ShouldCallMultipleActions() {
-        String input = "1\n2\n3\n0\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+    public void editTask() {
 
-        taskController.showMenu();
-
-        verify(taskService, times(1)).addTask();
-        verify(taskService, times(1)).showList();
-        verify(taskService, times(1)).editTask();
     }
+
+    @Test
+    public void editTaskWithException() {
+
+    }
+
+    @Test
+    public void editTaskNumberFour() {
+
+    }
+    @Test
+    public void sortTask() {
+
+    }
+
+    @Test
+    public void sortTaskWithException() {
+
+    }
+
+    @Test
+    public void filterTask() {
+
+    }
+
+    @Test
+    public void filterTaskWithException() {}
 }

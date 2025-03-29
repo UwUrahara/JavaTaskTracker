@@ -1,16 +1,14 @@
 package com.UwUrahara.pet1;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TaskService {
-    void showList();
-    void addTask();
-    void deleteTask();
-    void editTask();
-    void sortTaskList();
-    void filterTaskList();
+    void addTask(String name, String description, LocalDate date);
+    void deleteTask(int taskNumber) throws Exception;
+    void editTask(int taskNumber, int partNumber, String newText) throws Exception;
+    void sortTaskList(int partNumber, int sortNumber) throws Exception;
+    List<Task> filterTaskList(int numberOfStatus) throws Exception;
 
-    void printItem(int number, List<Task> taskList);
-
-    int enterCheck(int max, int min);
+    List<Task> getAll();
 }
