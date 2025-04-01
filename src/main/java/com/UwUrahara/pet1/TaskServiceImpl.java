@@ -90,6 +90,6 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private boolean numberIsInvalid(int number, int max) {
-        return !(number >= 0 && number <= max);
+        return !(number >= 0 && number < max);
     }
 }
