@@ -1,4 +1,7 @@
-package com.UwUrahara.pet1;
+package com.UwUrahara.pet1.repository;
+
+import com.UwUrahara.pet1.entity.Task;
+import com.UwUrahara.pet1.enumeration.Status;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,15 +15,15 @@ public class TaskRepositoryImpl implements TaskRepository {
         taskList.add(new Task("Три",
                 "Каждый из нас понимает очевидную вещь: \nперспективное планирование играет важную роль \nв формировании глубокомысленных рассуждений.",
                 LocalDate.of(2025, 10, 10),
-                0));
+                Status.TO_DO));
         taskList.add(new Task("Задачи",
                 "В рамках спецификации современных стандартов, \nэлементы политического процесса в равной степени \nпредоставлены сами себе.",
                 LocalDate.of(2024, 10, 10),
-                0));
+                Status.TO_DO));
         taskList.add(new Task("Для начала",
                 "Таким образом, высокотехнологичная концепция \nобщественного уклада является качественно новой \nступенью направлений прогрессивного развития!",
                 LocalDate.of(2023, 10, 10),
-                0));
+                Status.TO_DO));
     }
     @Override
     public List<Task> getAll() {

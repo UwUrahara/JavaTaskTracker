@@ -1,4 +1,8 @@
-package com.UwUrahara.pet1;
+package com.UwUrahara.pet1.controller;
+
+import com.UwUrahara.pet1.entity.Task;
+import com.UwUrahara.pet1.service.TaskService;
+import com.UwUrahara.pet1.TaskTracker;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,12 +30,12 @@ public class TaskControllerImpl implements TaskController {
             }
 
             switch (numberOfAction) {
-                case 1 -> addTask();
+                case 1 -> add();
                 case 2 -> showList();
-                case 3 -> editTask();
-                case 4 -> deleteTask();
-                case 5 -> filterTaskList();
-                case 6 -> sortTaskList();
+                case 3 -> edit();
+                case 4 -> delete();
+                case 5 -> filterList();
+                case 6 -> sortList();
                 default -> System.out.println("Invalid number");
             }
             System.out.println("\n");
@@ -39,7 +43,7 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public void addTask() {
+    public void add() {
         System.out.print("Введите название задачи: ");
         String name = scanner.nextLine();
         System.out.print("Введите описание: ");
@@ -50,7 +54,7 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public void deleteTask() {
+    public void delete() {
         System.out.print("Введите номер задачи, которую хотите удалить: ");
         int taskNumber = Integer.parseInt(scanner.nextLine());
         try {
@@ -61,7 +65,7 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public void editTask() {
+    public void edit() {
         System.out.print("Введите номер задачи, которую хотите отредактировать: ");
         int taskNumber = Integer.parseInt(scanner.nextLine());
         System.out.println("[1]Название   [2]Описание   [3]Дедлайн   [4]Статус");
@@ -82,7 +86,7 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public void sortTaskList() {
+    public void sortList() {
         System.out.println("[1]Name   [2]Date   [3]Status");
         System.out.print("Введите номер поля, по которому необходимо отсортировать: ");
         int partNumber = Integer.parseInt(scanner.nextLine());
@@ -97,7 +101,7 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public void filterTaskList() {System.out.println("[0]To do   [1]In progress   [2]Done");
+    public void filterList() {System.out.println("[0]To do   [1]In progress   [2]Done");
         System.out.print("Введите номер статуса, по которому необходимо отфильтровать: ");
         int numberOfStatus = Integer.parseInt(scanner.nextLine());
         List<Task> taskList;
@@ -119,14 +123,15 @@ public class TaskControllerImpl implements TaskController {
         }
     }
 
-    private void printItem(int number, Task task) {
-        System.out.println((number+1) + ") " + task.getName());
+    private void printItem(int index, Task task) {
+        int number = index + 1;
+        System.out.println((number) + ") " + task.getName());
         System.out.println(task.getDescription());
         System.out.println(task.getDate());
         switch (task.getStatus()) {
-            case 0 -> System.out.println("TO DO");
-            case 1 -> System.out.println("IN PROGRESS");
-            case 2 -> System.out.println("DONE");
+            case TO_DO -> System.out.println("TO DO");
+            case IN_PROGRESS -> System.out.println("IN PROGRESS");
+            case DONE -> System.out.println("DONE");
         }
     }
 }

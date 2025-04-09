@@ -1,4 +1,6 @@
-package com.UwUrahara.pet1;
+package com.UwUrahara.pet1.repository;
+
+import com.UwUrahara.pet1.entity.Task;
 
 import java.util.List;
 

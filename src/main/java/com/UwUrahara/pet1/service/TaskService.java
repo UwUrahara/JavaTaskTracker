@@ -1,4 +1,6 @@
-package com.UwUrahara.pet1;
+package com.UwUrahara.pet1.service;
+
+import com.UwUrahara.pet1.entity.Task;
 
 import java.time.LocalDate;
 import java.util.List;

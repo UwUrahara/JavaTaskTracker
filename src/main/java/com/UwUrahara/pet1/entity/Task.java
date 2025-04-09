@@ -1,4 +1,6 @@
-package com.UwUrahara.pet1;
+package com.UwUrahara.pet1.entity;
+
+import com.UwUrahara.pet1.enumeration.Status;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -8,9 +10,9 @@ public class Task implements Comparable<Task>{
     private String name;
     private String description;
     private LocalDate date;
-    private int status;
+    private Status status;
 
-    public Task(String name, String description, LocalDate date, int status) {
+    public Task(String name, String description, LocalDate date, Status status) {
         this.name = name;
         this.description = description;
         this.date = date;
@@ -23,14 +25,11 @@ public class Task implements Comparable<Task>{
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
     public void setDate(String date) {
         this.date = LocalDate.parse(date);
     }
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -43,7 +42,7 @@ public class Task implements Comparable<Task>{
     public LocalDate getDate() {
         return(this.date);
     }
-    public int getStatus() {
+    public Status getStatus() {
         return(this.status);
     }
 
@@ -84,8 +83,6 @@ public class Task implements Comparable<Task>{
             return dateCompare;
         }
 
-        return Integer.compare(this.status, other.status);
+        return Integer.compare(this.status.ordinal(), other.status.ordinal());
     }
 }
-
-// STATUS https://www.cyberforum.ru/java-gui/thread1792099.html

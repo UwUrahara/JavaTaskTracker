@@ -1,5 +1,9 @@
 package com.UwUrahara.pet1;
 
+import com.UwUrahara.pet1.entity.Task;
+import com.UwUrahara.pet1.enumeration.Status;
+import com.UwUrahara.pet1.repository.TaskRepository;
+import com.UwUrahara.pet1.repository.TaskRepositoryImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +31,7 @@ class TaskRepositoryImplTest {
         int size = list.size();
 
         //When
-        taskRepository.add(new Task("gh", "hjvjgh", LocalDate.of(2024, 5, 26), 0));
+        taskRepository.add(new Task("gh", "hjvjgh", LocalDate.of(2024, 5, 26), Status.TO_DO));
         List<Task> list1 = taskRepository.getAll();
 
         //Then
@@ -67,7 +71,7 @@ class TaskRepositoryImplTest {
     @Test
     public void update() {
         //Given
-        Task task = new Task("gh", "hjvjgh", LocalDate.of(2024, 5, 26), 0);
+        Task task = new Task("gh", "hjvjgh", LocalDate.of(2024, 5, 26), Status.TO_DO);
 
         //When
         taskRepository.update(1, task);

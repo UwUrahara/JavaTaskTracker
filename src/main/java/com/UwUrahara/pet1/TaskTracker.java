@@ -1,5 +1,12 @@
 package com.UwUrahara.pet1;
 
+import com.UwUrahara.pet1.controller.TaskController;
+import com.UwUrahara.pet1.controller.TaskControllerImpl;
+import com.UwUrahara.pet1.repository.TaskRepository;
+import com.UwUrahara.pet1.repository.TaskRepositoryImpl;
+import com.UwUrahara.pet1.service.TaskService;
+import com.UwUrahara.pet1.service.TaskServiceImpl;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;

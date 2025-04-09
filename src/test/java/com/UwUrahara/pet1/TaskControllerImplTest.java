@@ -1,5 +1,8 @@
 package com.UwUrahara.pet1;
 
+import com.UwUrahara.pet1.controller.TaskController;
+import com.UwUrahara.pet1.controller.TaskControllerImpl;
+import com.UwUrahara.pet1.service.TaskService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -61,7 +64,7 @@ class TaskControllerImplTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         taskController = new TaskControllerImpl(taskService, new Scanner(in));
         // When
-        taskController.addTask();
+        taskController.add();
         // Then
         verify(taskService, times(1))
                 .addTask("qwe", "qwer", TaskTracker.dateFromString("26.05.2024"));

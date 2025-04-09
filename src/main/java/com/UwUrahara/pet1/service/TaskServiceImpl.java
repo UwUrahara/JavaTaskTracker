@@ -1,4 +1,9 @@
-package com.UwUrahara.pet1;
+package com.UwUrahara.pet1.service;
+
+import com.UwUrahara.pet1.entity.Task;
+import com.UwUrahara.pet1.enumeration.PartOption;
+import com.UwUrahara.pet1.enumeration.Status;
+import com.UwUrahara.pet1.repository.TaskRepository;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -21,14 +26,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void addTask(String name, String description, LocalDate date) {
-        taskRepository.add(new Task(name, description, date, 0));
+        taskRepository.add(new Task(name, description, date, Status.TO_DO));
     }
 
     @Override
     public void deleteTask(int taskNumber) throws Exception {
         taskNumber--;
         if (numberIsInvalid(taskNumber, taskRepository.getListSize())) {
-            throw new Exception("Invalid task number");
+            throw new Exception("Неверный номер задачи");
         }
         taskRepository.delete(taskNumber);
     }
@@ -37,40 +42,39 @@ public class TaskServiceImpl implements TaskService {
     public void editTask(int taskNumber, int partNumber, String newText) throws Exception {
         taskNumber--;
         if (numberIsInvalid(taskNumber, taskRepository.getListSize())) {
-            throw new Exception("Invalid task number");
+            throw new Exception("Неверный номер задачи");
         }
         Task current = taskRepository.getByNumber(taskNumber);
 
-        switch (partNumber) {
-            case 1 -> current.setName(newText);
-            case 2 -> current.setDescription(newText);
-            case 3 -> current.setDate(newText);
-            case 4 -> {
-                if (current.getStatus() < 2) {
-                    current.setStatus(current.getStatus()+1);
+        switch (PartOption.getByIndex(partNumber)) {
+            case NAME -> current.setName(newText);
+            case DESCRIPTION -> current.setDescription(newText);
+            case DATE -> current.setDate(newText);
+            case STATUS -> {
+                if (current.getStatus() != Status.DONE) {
+                    current.setStatus(Status.getByIndex(current.getStatus().ordinal()+1));
                 }
             }
-            default -> throw new Exception("Invalid part number");
         }
         taskRepository.update(taskNumber, current);
     }
 
     @Override
-    public void sortTaskList(int partNumber, int sortNumber) throws Exception {
+    public void sortTaskList(int partNumber, int sortNumber) {
         boolean reversed = sortNumber != 1;
         List<Task> taskList = taskRepository.getAll();
 
-        switch (partNumber) {
-            case 1 -> taskList = taskList.stream()
+        switch (PartOption.getByIndex(partNumber)) {
+            case NAME -> taskList = taskList.stream()
                     .sorted(reverseIfNeed(reversed, Comparator.comparing(Task::getName)))
                     .collect(Collectors.toList());
-            case 2 -> taskList = taskList.stream()
+            case DATE -> taskList = taskList.stream()
                     .sorted(reverseIfNeed(reversed, Comparator.comparing(Task::getDate)))
                     .collect(Collectors.toList());
-            case 3 -> taskList = taskList.stream()
+            case STATUS -> taskList = taskList.stream()
                     .sorted(reverseIfNeed(reversed, Comparator.comparing(Task::getStatus)))
                     .collect(Collectors.toList());
-            default -> throw new Exception("Invalid part number");
+            default -> throw new IllegalArgumentException("Неверное число: " + partNumber);
         }
         taskRepository.deleteAll();
         taskRepository.saveAll(taskList);
@@ -82,10 +86,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> filterTaskList(int numberOfStatus) throws Exception {
         if (numberIsInvalid(numberOfStatus, 2)) {
-            throw new Exception("Invalid status");
+            throw new Exception("Неверное число");
         }
         return taskRepository.getAll().stream()
-                .filter(task -> numberOfStatus == task.getStatus())
+                .filter(task -> numberOfStatus == task.getStatus().ordinal())
                 .collect(Collectors.toList());
     }
 
