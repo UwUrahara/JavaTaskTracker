@@ -1,6 +1,7 @@
 package com.UwUrahara.pet1.controller;
 
 import com.UwUrahara.pet1.entity.Task;
+import com.UwUrahara.pet1.enumeration.PartOption;
 import com.UwUrahara.pet1.service.TaskService;
 import com.UwUrahara.pet1.TaskTracker;
 
@@ -19,7 +20,6 @@ public class TaskControllerImpl implements TaskController {
 
     @Override
     public void showMenu() {
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\n[1]Add   [2]List   [3]Edit   [4]Delete   [5]Filter   [6]Sort   [0]Exit");
             System.out.print("Введите номер действия: ");
@@ -72,12 +72,13 @@ public class TaskControllerImpl implements TaskController {
         System.out.print("Выберите, что именно необходимо отредактировать, и введитe немер: ");
         int partNumber = Integer.parseInt(scanner.nextLine());
         String newText = null;
-        if (partNumber != 4) {
+        if (PartOption.getByIndex(partNumber) != PartOption.STATUS) {
             System.out.print("Введите новое значение и нажмите ENTER, чтобы отправить: ");
-            newText = scanner.nextLine();
         } else {
-            System.out.println("Статус обновлён");
+            System.out.println("[1]To do   [2]In progress   [3]Done");
+            System.out.print("Введите номер нового значения: ");
         }
+        newText = scanner.nextLine();
         try {
             taskService.editTask(taskNumber, partNumber, newText);
         } catch (Exception e) {

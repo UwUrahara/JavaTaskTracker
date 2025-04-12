@@ -33,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
     public void deleteTask(int taskNumber) throws Exception {
         taskNumber--;
         if (numberIsInvalid(taskNumber, taskRepository.getListSize())) {
-            throw new Exception("Неверный номер задачи");
+            throw new IllegalArgumentException("Неверный номер задачи");
         }
         taskRepository.delete(taskNumber);
     }
@@ -42,7 +42,7 @@ public class TaskServiceImpl implements TaskService {
     public void editTask(int taskNumber, int partNumber, String newText) throws Exception {
         taskNumber--;
         if (numberIsInvalid(taskNumber, taskRepository.getListSize())) {
-            throw new Exception("Неверный номер задачи");
+            throw new IllegalArgumentException("Неверный номер задачи");
         }
         Task current = taskRepository.getByNumber(taskNumber);
 
@@ -51,10 +51,9 @@ public class TaskServiceImpl implements TaskService {
             case DESCRIPTION -> current.setDescription(newText);
             case DATE -> current.setDate(newText);
             case STATUS -> {
-                if (current.getStatus() != Status.DONE) {
-                    current.setStatus(Status.getByIndex(current.getStatus().ordinal()+1));
-                }
+                current.setStatus(Status.getByIndex(Integer.parseInt(newText)));
             }
+            default -> throw new IllegalStateException("Неверное число: " + partNumber);
         }
         taskRepository.update(taskNumber, current);
     }
@@ -86,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> filterTaskList(int numberOfStatus) throws Exception {
         if (numberIsInvalid(numberOfStatus, 2)) {
-            throw new Exception("Неверное число");
+            throw new IllegalArgumentException("Неверное число");
         }
         return taskRepository.getAll().stream()
                 .filter(task -> numberOfStatus == task.getStatus().ordinal())

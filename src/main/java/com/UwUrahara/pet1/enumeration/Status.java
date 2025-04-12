@@ -7,12 +7,12 @@ public enum Status {
 
     private final int statusIndex;
 
-    Status(int partIndex) {
-        this.statusIndex = partIndex;
+    Status(int statusIndex) {
+        this.statusIndex = statusIndex;
     }
 
-    public static com.UwUrahara.pet1.enumeration.Status getByIndex(int number) {
-        for (com.UwUrahara.pet1.enumeration.Status status: values()) {
+    public static Status getByIndex(int number) {
+        for (Status status: values()) {
             if (status.statusIndex == number) {
                 return status;
             }

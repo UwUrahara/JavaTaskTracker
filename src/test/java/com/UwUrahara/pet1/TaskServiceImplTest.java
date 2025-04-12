@@ -7,6 +7,7 @@ import com.UwUrahara.pet1.service.TaskService;
 import com.UwUrahara.pet1.service.TaskServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -33,12 +34,14 @@ class TaskServiceImplTest {
         //When
         taskService.addTask(name, description, date);
         //Then
-        verify(taskRepository).add(argThat(task ->
-                task.getName().equals(name) &&
-                        task.getDescription().equals(description) &&
-                        task.getDate().equals(date) &&
-                        task.getStatus() == Status.TO_DO
-        ));
+        ArgumentCaptor<Task> taskCaptor = ArgumentCaptor.forClass(Task.class);
+        verify(taskRepository).add(taskCaptor.capture());
+
+        Task createdTask = taskCaptor.getValue();
+        assertEquals(name, createdTask.getName(), "Название задачи не совпадает");
+        assertEquals(description, createdTask.getDescription(), "Описание задачи не совпадает");
+        assertEquals(date, createdTask.getDate(), "Дата задачи не совпадает");
+        assertEquals(Status.TO_DO, createdTask.getStatus(), "Статус должен быть TO_DO");
     }
 
     @Test
@@ -72,9 +75,9 @@ class TaskServiceImplTest {
         //Then
         assertEquals("New Name", mockTask.getName());
         //When
-        taskService.editTask(1, 4, "");
+        taskService.editTask(1, 4, "2");
         //Then
-        //assertEquals(Status.IN_PROGRESS, mockTask.getStatus());
+        assertEquals(Status.IN_PROGRESS, mockTask.getStatus());
 
         verify(taskRepository, times(2)).update(eq(0), eq(mockTask));
     }
@@ -105,20 +108,21 @@ class TaskServiceImplTest {
         Task task1 = new Task("B", "Desc1", LocalDate.of(2023, 1, 2), Status.IN_PROGRESS);
         Task task2 = new Task("A", "Desc2", LocalDate.of(2023, 1, 1), Status.DONE);
         List<Task> tasks = Arrays.asList(task1, task2);
-        //When
         when(taskRepository.getAll()).thenReturn(tasks);
-        //Then
-        // Sort by name ascending
+        //When
         taskService.sortTaskList(1, 1);
-        verify(taskRepository).saveAll(argThat(list ->
-                list.getFirst().getName().equals("A") &&
-                        list.get(1).getName().equals("B")
-        ));
+        //Then
+        ArgumentCaptor<List<Task>> captor = ArgumentCaptor.forClass(List.class);
+        verify(taskRepository).saveAll(captor.capture());
+
+        List<Task> sortedTasks = captor.getValue();
+        assertEquals(2, sortedTasks.size());
+        assertEquals(task2, sortedTasks.get(0));
+        assertEquals(task1, sortedTasks.get(1));
     }
 
     @Test
     public void sortTasksWithException() {
-        //assertThrows(Exception.class, () -> taskService.sortTaskList(4, 1));
         assertThrows(Exception.class, () -> taskService.sortTaskList(0, 1));
     }
 
@@ -133,7 +137,7 @@ class TaskServiceImplTest {
         //Then
         List<Task> filtered = taskService.filterTaskList(1);
         assertEquals(1, filtered.size());
-        assertEquals("B", filtered.getFirst().getName());
+        assertEquals(task2, filtered.getFirst());
     }
 
     @Test
